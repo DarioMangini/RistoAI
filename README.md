@@ -90,4 +90,6 @@ curl -X POST http://localhost:5010/api/chat \
 ## GUI
 A GUI is not included in this repo; the backend is designed to be exposed to an external frontend (web/mobile).
 
-
+Author
+-----------------
+Mangini Dario
