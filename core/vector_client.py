@@ -43,7 +43,7 @@ def _run(sql: str, args: tuple | list | None = None, dict_cursor=False) -> list[
 
 # ───────── HTTP embedding client ─────────
 # Usa all-mpnet-base-v2 (768d) di default
-EMB_URL = os.getenv("EMB_URL_MPNET", "http://localhost:5050/embedding/all-mpnet-base-v2")
+EMB_URL = os.getenv("EMB_URL_MPNET", "http://localhost:5020/embedding/all-mpnet-base-v2")
 _HTTP = requests.Session()
 
 def _parse_vec(resp_json):

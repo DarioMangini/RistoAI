@@ -8,7 +8,7 @@ from core.db_router     import map_project_to_db, set_current_db, get_current_db
 def get_prompt(project: str | None) -> str:
     """
     Restituisce il prompt più aggiornato per il progetto richiesto.
-    • Mappa 'sushi' → DB ristosushi_it, ecc.
+    • Mappa alias comuni ('sushi', 'demo') → DB di default
     • ORDER BY updated_at DESC così, se togli il UNIQUE e tieni versioni,
       pescherai sempre la più fresca.
     • Se la tabella non esiste, ritorna "" e il chiamante userà il payload.

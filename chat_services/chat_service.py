@@ -6,7 +6,7 @@ recupera criteri e recensioni via LLM, arricchisce con menu/cart/reviews,
 e interroga il modello vLLM per generare la risposta.
 """
 
-import json, logging, re, time
+import json, logging, os, re, time
 import redis
 from typing import List, Dict, Any
 from concurrent.futures import ThreadPoolExecutor
@@ -25,24 +25,29 @@ from cart_services.cart_service import fetch_cart
 from core.db_router import set_current_db 
 from core.prompt_store import get_prompt
 from datetime import datetime
-import sys
 from concurrent.futures import as_completed
-import time
+from pathlib import Path
 
-# Utility per formattare i messaggi compatibili con vLLM
-sys.path.append('/srv/matrix/share')
-from format_messages_for_vllm import format_messages_for_vllm
+from core.llm_formatting import format_messages_for_vllm
 
 # Configurazione modello LLM
-LLM_URL   = "http://localhost:8000/v1/chat/completions"
-LLM_MODEL = "google/gemma-3-27b-it"
+LLM_URL   = os.getenv("LLM_URL", "http://localhost:8000/v1/chat/completions")
+LLM_MODEL = os.getenv("LLM_MODEL", "google/gemma-3-27b-it")
+DEFAULT_PROMPT_FILE = Path(
+    os.getenv(
+        "CHAT_PROMPT_FILE",
+        Path(__file__).resolve().parents[1] / "prompts" / "demo-chat.txt"
+    )
+)
 
 # ────────────────────────────────────────────────────────────────
 # Thread pool condiviso per task asincroni (criteri + recensioni)
 EXECUTOR = ThreadPoolExecutor(max_workers=32)
 
 # Redis per mantenere lo stato della conversazione (es. preferenze di consegna)
-REDIS = redis.Redis(host="localhost", port=6379, decode_responses=True)
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+REDIS = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 REDIS_TTL = 7200        # 2 h in secondi
 
 # TTL-cache “interno” per fetch_reviews è già gestito dal modulo
@@ -202,6 +207,12 @@ def chat(payload: Dict[str,Any]) -> Dict[str,Any]:
     prompts = get_prompt(project)
     if not prompts:
         prompts      = payload.get("prompts", "")
+    if not prompts:
+        try:
+            prompts = DEFAULT_PROMPT_FILE.read_text(encoding="utf-8")
+            logging.info("[chat_service] prompt caricato da %s", DEFAULT_PROMPT_FILE)
+        except FileNotFoundError:
+            logging.error("[chat_service] Prompt file mancante (%s)", DEFAULT_PROMPT_FILE)
 
     if not prompts or conv_history is None:
         return {"error": "Missing prompts or conversation_history"}

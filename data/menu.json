@@ -1,0 +1,528 @@
+[
+  {
+    "name": "Edamame Agrumato",
+    "type": "Antipasto",
+    "description": "Baccelli di soia al vapore con sale marino e scorza di lime.",
+    "ingredients": [
+      "edamame",
+      "lime",
+      "sale marino"
+    ],
+    "price": 4.5
+  },
+  {
+    "name": "Gyoza Verde",
+    "type": "Antipasto",
+    "description": "Ravioli alla piastra ripieni di spinaci, tofu e zenzero con salsa ponzu leggera.",
+    "ingredients": [
+      "spinaci",
+      "tofu",
+      "zenzero",
+      "ponzu"
+    ],
+    "price": 7.5
+  },
+  {
+    "name": "Tataki di Tonno al Sesamo",
+    "type": "Antipasto",
+    "description": "Tonno scottato in crosta di sesamo con dressing agrumato al miso.",
+    "ingredients": [
+      "tonno",
+      "semi di sesamo",
+      "miso",
+      "lime"
+    ],
+    "price": 9.5
+  },
+  {
+    "name": "Ceviche Yuzu",
+    "type": "Ceviche",
+    "description": "Cubetti di ricciola marinati in yuzu, coriandolo e peperoncino dolce.",
+    "ingredients": [
+      "ricciola",
+      "yuzu",
+      "coriandolo",
+      "peperoncino"
+    ],
+    "price": 12.0
+  },
+  {
+    "name": "Ceviche Tropicale",
+    "type": "Ceviche",
+    "description": "Branzino marinato con mango, latte di cocco e pepe rosa.",
+    "ingredients": [
+      "branzino",
+      "mango",
+      "latte di cocco",
+      "pepe rosa"
+    ],
+    "price": 12.5
+  },
+  {
+    "name": "Miso Bowl Arrosto",
+    "type": "Piatto caldo",
+    "description": "Riso caldo con verdure di stagione arrosto, uovo e brodo miso leggero.",
+    "ingredients": [
+      "riso",
+      "verdure",
+      "uovo",
+      "brodo miso"
+    ],
+    "price": 11.0
+  },
+  {
+    "name": "Gamberi Croccanti Panko",
+    "type": "Piatto caldo",
+    "description": "Mazzancolle in panko servite con maionese al wasabi e lime.",
+    "ingredients": [
+      "mazzancolle",
+      "panko",
+      "wasabi",
+      "lime"
+    ],
+    "price": 13.0
+  },
+  {
+    "name": "Ramen Shoyu Vegetale",
+    "type": "Piatto caldo",
+    "description": "Brodo shoyu con noodles, funghi shiitake, pak choi e olio al sesamo.",
+    "ingredients": [
+      "brodo shoyu",
+      "noodles",
+      "shiitake",
+      "pak choi",
+      "olio di sesamo"
+    ],
+    "price": 12.0
+  },
+  {
+    "name": "Sashimi Salmone Nordico",
+    "type": "Sashimi",
+    "description": "Fette di salmone tagliate al momento con salsa di soia leggera.",
+    "ingredients": [
+      "salmone",
+      "salsa di soia",
+      "lime"
+    ],
+    "price": 11.0
+  },
+  {
+    "name": "Sashimi Tonno Fuoco",
+    "type": "Sashimi",
+    "description": "Tonno rosso marinato al peperoncino e soia affumicata.",
+    "ingredients": [
+      "tonno",
+      "peperoncino",
+      "salsa di soia"
+    ],
+    "price": 12.0
+  },
+  {
+    "name": "Sashimi Branzino Lime",
+    "type": "Sashimi",
+    "description": "Branzino marinato a crudo con lime, olio evo e fleur de sel.",
+    "ingredients": [
+      "branzino",
+      "lime",
+      "olio evo",
+      "fleur de sel"
+    ],
+    "price": 11.5
+  },
+  {
+    "name": "Nighiri Salmone Classico",
+    "type": "Nighiri",
+    "description": "Riso tiepido con ventresca di salmone e pennellata di soia dolce.",
+    "ingredients": [
+      "riso",
+      "salmone",
+      "salsa di soia"
+    ],
+    "price": 3.0
+  },
+  {
+    "name": "Nighiri Tonno",
+    "type": "Nighiri",
+    "description": "Tonno rosso su riso condito con wasabi fresco.",
+    "ingredients": [
+      "riso",
+      "tonno",
+      "wasabi"
+    ],
+    "price": 3.2
+  },
+  {
+    "name": "Nighiri Avocado Ponzu",
+    "type": "Nighiri",
+    "description": "Fetta di avocado marinata in ponzu con sesamo tostato.",
+    "ingredients": [
+      "avocado",
+      "ponzu",
+      "sesamo"
+    ],
+    "price": 2.7
+  },
+  {
+    "name": "Gunkan Spicy Tuna",
+    "type": "Gunkan",
+    "description": "Riso avvolto da alga nori con tartare di tonno piccante.",
+    "ingredients": [
+      "riso",
+      "tonno",
+      "maionese piccante",
+      "alga nori"
+    ],
+    "price": 4.2
+  },
+  {
+    "name": "Gunkan Ricciola alle Erbe",
+    "type": "Gunkan",
+    "description": "Tartare di ricciola con erba cipollina e zest di limone.",
+    "ingredients": [
+      "ricciola",
+      "erba cipollina",
+      "limone",
+      "riso"
+    ],
+    "price": 4.2
+  },
+  {
+    "name": "Hosomaki Avocado",
+    "type": "Hosomaki",
+    "description": "Roll sottile con avocado cremoso e riso profumato al riso nero.",
+    "ingredients": [
+      "avocado",
+      "riso",
+      "alga nori"
+    ],
+    "price": 5.0
+  },
+  {
+    "name": "Hosomaki Cetriolo Croccante",
+    "type": "Hosomaki",
+    "description": "Cetriolo marinato e sesamo tostato in alga nori.",
+    "ingredients": [
+      "cetriolo",
+      "sesamo",
+      "alga nori",
+      "riso"
+    ],
+    "price": 4.8
+  },
+  {
+    "name": "Hosomaki Salmone Lime",
+    "type": "Hosomaki",
+    "description": "Roll sottile con salmone e lime candito.",
+    "ingredients": [
+      "salmone",
+      "lime",
+      "alga nori",
+      "riso"
+    ],
+    "price": 5.5
+  },
+  {
+    "name": "Hosomaki Tonno Menta",
+    "type": "Hosomaki",
+    "description": "Tonno crudo con menta fresca e riso leggero.",
+    "ingredients": [
+      "tonno",
+      "menta",
+      "riso",
+      "alga nori"
+    ],
+    "price": 5.8
+  },
+  {
+    "name": "Uramaki Yuzu Salmon",
+    "type": "Uramaki",
+    "description": "Roll invertito con salmone, maionese allo yuzu e chips di cipolla.",
+    "ingredients": [
+      "salmone",
+      "yuzu",
+      "cipolla croccante",
+      "riso",
+      "alga nori"
+    ],
+    "price": 10.5
+  },
+  {
+    "name": "Uramaki Crispy Shrimp",
+    "type": "Uramaki",
+    "description": "Gambero in tempura, avocado e salsa teriyaki al sesamo.",
+    "ingredients": [
+      "gambero",
+      "tempura",
+      "avocado",
+      "teriyaki",
+      "sesamo"
+    ],
+    "price": 11.0
+  },
+  {
+    "name": "Uramaki Green Garden",
+    "type": "Uramaki",
+    "description": "Roll vegano con tofu affumicato, asparagi e crema di avocado.",
+    "ingredients": [
+      "tofu affumicato",
+      "asparagi",
+      "avocado",
+      "riso",
+      "alga nori"
+    ],
+    "price": 10.0
+  },
+  {
+    "name": "Uramaki Sunburn",
+    "type": "Uramaki",
+    "description": "Tonno marinato al gochujang con cetriolo e panko croccante.",
+    "ingredients": [
+      "tonno",
+      "gochujang",
+      "cetriolo",
+      "panko"
+    ],
+    "price": 11.0
+  },
+  {
+    "name": "Futomaki Tempura Eb",
+    "type": "Futomaki fritto",
+    "description": "Roll grande con gambero tempura, maionese piccante e lattuga.",
+    "ingredients": [
+      "gambero",
+      "tempura",
+      "maionese piccante",
+      "lattuga"
+    ],
+    "price": 12.5
+  },
+  {
+    "name": "Futomaki Dragon Veg",
+    "type": "Futomaki fritto",
+    "description": "Roll fritto con melanzana teriyaki, cipolla croccante e avocado.",
+    "ingredients": [
+      "melanzana",
+      "teriyaki",
+      "cipolla",
+      "avocado",
+      "riso"
+    ],
+    "price": 12.0
+  },
+  {
+    "name": "Roll di Manzo Tataki",
+    "type": "Sushi di carne",
+    "description": "Fettine di manzo tataki su riso sushi con dressing di soia e miele.",
+    "ingredients": [
+      "manzo",
+      "soia",
+      "miele",
+      "sesamo"
+    ],
+    "price": 8.5
+  },
+  {
+    "name": "Roll Pollo Yakitori",
+    "type": "Sushi di carne",
+    "description": "Pollo glassato alla yakitori, erba cipollina e riso caldo.",
+    "ingredients": [
+      "pollo",
+      "yakitori",
+      "erba cipollina",
+      "riso"
+    ],
+    "price": 7.8
+  },
+  {
+    "name": "Onigiri Bosco Verde",
+    "type": "Vegan",
+    "description": "Triangolo di riso ripieno di funghi shiitake, spinaci e sesamo nero.",
+    "ingredients": [
+      "riso",
+      "shiitake",
+      "spinaci",
+      "sesamo nero"
+    ],
+    "price": 6.0
+  },
+  {
+    "name": "Rainbow Veg Bowl",
+    "type": "Vegan",
+    "description": "Ciotola di riso integrale con verdure colorate, tofu croccante e salsa tahina.",
+    "ingredients": [
+      "riso integrale",
+      "tofu",
+      "verdure",
+      "tahina"
+    ],
+    "price": 10.5
+  },
+  {
+    "name": "Tartare Salmone Mango",
+    "type": "Tartare",
+    "description": "Tartare di salmone con mango, lime e pepe di Timut.",
+    "ingredients": [
+      "salmone",
+      "mango",
+      "lime",
+      "pepe"
+    ],
+    "price": 11.5
+  },
+  {
+    "name": "Tartare Tonno Shichimi",
+    "type": "Tartare",
+    "description": "Tonno tagliato al coltello con shichimi togarashi e maionese al ponzu.",
+    "ingredients": [
+      "tonno",
+      "shichimi",
+      "ponzu",
+      "maionese"
+    ],
+    "price": 12.5
+  },
+  {
+    "name": "Percorso Degustazione Luna",
+    "type": "Degustazione",
+    "description": "Sequenza di 6 portate stagionali scelte dallo chef, mix crudo/caldo.",
+    "ingredients": [
+      "chef selection"
+    ],
+    "price": 38.0
+  },
+  {
+    "name": "Mochi Yuzu",
+    "type": "Dolci",
+    "description": "Morbidi mochi ripieni di gelato allo yuzu e crumble di sesamo.",
+    "ingredients": [
+      "mochi",
+      "yuzu",
+      "gelato",
+      "sesamo"
+    ],
+    "price": 5.5
+  },
+  {
+    "name": "Torta Cioccolato al Miso",
+    "type": "Dolci",
+    "description": "Tortino caldo al cioccolato fondente con caramello al miso.",
+    "ingredients": [
+      "cioccolato",
+      "miso",
+      "uova",
+      "burro"
+    ],
+    "price": 6.0
+  },
+  {
+    "name": "Tè Verde Freddo",
+    "type": "Bibita",
+    "description": "Infuso di tè verde freddo con miele di tiglio e lime.",
+    "ingredients": [
+      "tè verde",
+      "miele",
+      "lime"
+    ],
+    "price": 3.5
+  },
+  {
+    "name": "Kombucha Ginger",
+    "type": "Bibita",
+    "description": "Kombucha artigianale allo zenzero, leggermente frizzante.",
+    "ingredients": [
+      "kombucha",
+      "zenzero"
+    ],
+    "price": 4.2
+  },
+  {
+    "name": "Vino Bianco Valle Luminosa",
+    "type": "Vino Bianco",
+    "description": "Bianco fresco con note di agrumi e fiori bianchi (bottiglia 0,75l).",
+    "ingredients": [
+      "uve bianche"
+    ],
+    "price": 18.0
+  },
+  {
+    "name": "Vino Rosso Bosco Notturno",
+    "type": "Vino Rosso",
+    "description": "Rosso morbido con sentori di frutti rossi e spezie dolci (bottiglia 0,75l).",
+    "ingredients": [
+      "uve rosse"
+    ],
+    "price": 20.0
+  },
+  {
+    "name": "Spumante Ponzu Brut",
+    "type": "Spumante",
+    "description": "Bollicina secca con lievi note agrumate, perfetta per gli antipasti.",
+    "ingredients": [
+      "uve bianche"
+    ],
+    "price": 19.0
+  },
+  {
+    "name": "Rosato Alba Marina",
+    "type": "Rosato",
+    "description": "Rosato fresco e sapido con retrogusto di frutti di bosco.",
+    "ingredients": [
+      "uve rosate"
+    ],
+    "price": 17.0
+  },
+  {
+    "name": "Espresso Tostato",
+    "type": "Caffetteria",
+    "description": "Caffè espresso di miscela arabica, estratto corto.",
+    "ingredients": [
+      "caffè arabica"
+    ],
+    "price": 1.5
+  },
+  {
+    "name": "Amaro Yuzu",
+    "type": "Digestivo",
+    "description": "Liquore artigianale al yuzu e erbe alpine.",
+    "ingredients": [
+      "yuzu",
+      "erbe alpine"
+    ],
+    "price": 4.5
+  },
+  {
+    "name": "Birra Lager di Riso",
+    "type": "Birra",
+    "description": "Lager chiara prodotta con riso e luppolo aromatico (bottiglia 33cl).",
+    "ingredients": [
+      "malto",
+      "riso",
+      "luppolo"
+    ],
+    "price": 5.0
+  },
+  {
+    "name": "Yuzu Spritz",
+    "type": "Cocktail",
+    "description": "Spritz con infuso di yuzu, bergamotto e bitter alle erbe.",
+    "ingredients": [
+      "yuzu",
+      "bergamotto",
+      "bitter",
+      "prosecco"
+    ],
+    "price": 8.0
+  },
+  {
+    "name": "Gin Pepe Rosa",
+    "type": "Gin",
+    "description": "Gin secco con botaniche di pepe rosa e lime, servito con tonica secca.",
+    "ingredients": [
+      "gin",
+      "pepe rosa",
+      "lime",
+      "tonica"
+    ],
+    "price": 9.0
+  }
+]

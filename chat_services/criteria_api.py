@@ -5,8 +5,9 @@ Interfaccia invariata: extract_criteria(messages, sessionid) -> List[dict]
 """
 
 from __future__ import annotations
-import os, sys, json, logging, re, pathlib, requests
+import os, json, logging, re, pathlib, requests
 from typing import List, Dict, Any
+from core.llm_formatting import format_messages_for_vllm
 
 # ─────────────────────────────────────────────────────────────
 # Config
@@ -15,15 +16,14 @@ MODE = os.getenv("CRITERIA_API_MODE", "local").lower()   # 'local' | 'remote'
 LLM_URL   = os.getenv("LLM_URL",   "http://localhost:8000/v1/chat/completions")
 LLM_MODEL = os.getenv("LLM_MODEL", "google/gemma-3-27b-it")
 
-PROMPTS_DIR = pathlib.Path(os.getenv("PROMPTS_DIR", "/srv/prompts"))
-CRIT_PROMPT_BASENAME = os.getenv("CRITERIA_PROMPT_BASENAME", "ristosushi_it-criteria")
+_DEFAULT_PROMPTS_DIR = pathlib.Path(__file__).resolve().parents[1] / "prompts"
+PROMPTS_DIR = pathlib.Path(os.getenv("PROMPTS_DIR", _DEFAULT_PROMPTS_DIR))
+CRIT_PROMPT_BASENAME = os.getenv("CRITERIA_PROMPT_BASENAME", "demo-criteria")
 
-REMOTE_URL  = os.getenv("CRITERIA_REMOTE_URL", "https://app.glacom.ai/api/ristosushi_it-criteria")
-REMOTE_HEAD = {"Content-Type": "application/json", "X-Authorization": os.getenv("REMOTE_API_KEY", "freedom")}
-
-# vLLM formatter (come negli altri progetti)
-sys.path.append('/srv/matrix/share')
-from format_messages_for_vllm import format_messages_for_vllm
+REMOTE_URL  = os.getenv("CRITERIA_REMOTE_URL", "http://localhost:9001/api/criteria")
+REMOTE_HEAD = {"Content-Type": "application/json"}
+if os.getenv("REMOTE_API_KEY"):
+    REMOTE_HEAD["X-Authorization"] = os.getenv("REMOTE_API_KEY")
 
 
 # ─────────────────────────────────────────────────────────────

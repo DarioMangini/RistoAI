@@ -1,22 +1,24 @@
 # services/config.py
 """
-Configurazione centrale dell'app:
-• Parametri DB
-• URI per SQLAlchemy
-• Log level
-• Accesso credenziali per psycopg2
+Configurazione centrale dell'app.
+I parametri sensibili sono gestiti tramite variabili d'ambiente:
+• DB_NAME, DB_USER, DB_PASS, DB_HOST, DB_PORT
+• DATABASE_URL (se presente, sovrascrive gli altri parametri)
 """
+
+import os
 
 class Config:
     # Parametri database
-    DB_NAME = "ristosushi_it"
-    DB_USER = "postgres"
-    DB_PASS = "Rae4ethae2qu"
-    DB_HOST = "localhost"          # oppure "matrix.glacom.com"
-    DB_PORT = 5432
+    DB_NAME = os.getenv("DB_NAME", "demo_restaurant")
+    DB_USER = os.getenv("DB_USER", "postgres")
+    DB_PASS = os.getenv("DB_PASS", "postgres")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = int(os.getenv("DB_PORT", "5432"))
 
     # URI compatibile con SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = (
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL",
         f"postgresql+psycopg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False

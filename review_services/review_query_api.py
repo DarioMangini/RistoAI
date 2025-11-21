@@ -5,21 +5,22 @@ Interfaccia invariata: extract_review_queries(messages, sessionid) -> Dict[str,A
 """
 
 from __future__ import annotations
-import os, sys, json, logging, re, pathlib, requests
+import os, json, logging, re, pathlib, requests
 from typing import List, Dict, Any
+from core.llm_formatting import format_messages_for_vllm
 
 MODE = os.getenv("REVIEW_API_MODE", "local").lower()   # 'local' | 'remote'
 LLM_URL   = os.getenv("LLM_URL",   "http://localhost:8000/v1/chat/completions")
 LLM_MODEL = os.getenv("LLM_MODEL", "google/gemma-3-27b-it")
 
-PROMPTS_DIR = pathlib.Path(os.getenv("PROMPTS_DIR", "/srv/prompts"))
-REV_PROMPT_BASENAME = os.getenv("REVIEWS_PROMPT_BASENAME", "ristosushi_it-recensioni")
+_DEFAULT_PROMPTS_DIR = pathlib.Path(__file__).resolve().parents[1] / "prompts"
+PROMPTS_DIR = pathlib.Path(os.getenv("PROMPTS_DIR", _DEFAULT_PROMPTS_DIR))
+REV_PROMPT_BASENAME = os.getenv("REVIEWS_PROMPT_BASENAME", "demo-reviews")
 
-REMOTE_URL  = os.getenv("REVIEWS_REMOTE_URL", "https://app.glacom.ai/api/ristosushi_it-recensioni")
-REMOTE_HEAD = {"Content-Type": "application/json", "X-Authorization": os.getenv("REMOTE_API_KEY", "freedom")}
-
-sys.path.append('/srv/matrix/share')
-from format_messages_for_vllm import format_messages_for_vllm
+REMOTE_URL  = os.getenv("REVIEWS_REMOTE_URL", "http://localhost:9001/api/reviews")
+REMOTE_HEAD = {"Content-Type": "application/json"}
+if os.getenv("REMOTE_API_KEY"):
+    REMOTE_HEAD["X-Authorization"] = os.getenv("REMOTE_API_KEY")
 
 _FENCE_RE = re.compile(r"^```(?:json)?\s*|\s*```$", re.I)
 

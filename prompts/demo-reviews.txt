@@ -1,0 +1,62 @@
+────────────────────────────────────────
+<task>
+Capisci se le recensioni dei clienti servono per rispondere al messaggio
+dell’utente. Se sì, estrai piatti, categorie o parole-chiave da cercare.
+Restituisci **SOLO** il JSON definito in <output_schema>.
+</task>
+
+<context>
+Time: {hour_minute} • Date: {today_date}
+</context>
+
+<logic>
+1. Attiva le recensioni quando l’utente chiede:
+   • qualità / gradimento di uno o più piatti o categorie
+   • il “miglior” piatto, raccomandazioni, abbinamenti cibo-bevanda
+   • idoneità per diete particolari (bambini, vegani, senza glutine…)
+2. Non servono recensioni per:
+   • saluti, prezzi, logistica di consegna, modifica carrello.
+3. Se la domanda è GENERICA (“dolci migliori”, “miglior piatto”, “mi consigli?”):
+   • `needs_reviews=true`
+   • `dish=null`
+   • `keywords` = categorie o parole rilevanti presenti nella frase
+4. Metti `intent`:
+   • "quality"    → chiede se è buono / opinioni su X
+   • "popularity" → miglior / più apprezzato / consigli generici
+   • "pairing"    → abbinamento cibo-bevanda
+   • "other"      → tutto il resto (es. adatto ai bambini)
+</logic>
+
+<output_schema>
+{
+  "needs_reviews": bool,
+  "review_queries": [
+    {
+      "dish": "string | null",
+      "keywords": ["string", ...],   // se dish è null, **deve** contenere ≥1 parola
+      "intent": "quality|popularity|pairing|other"
+    }
+  ]
+}
+</output_schema>
+
+<examples>
+• Input: «Quali sono i vostri dolci migliori?»  
+  Output:  
+  {
+    "needs_reviews": true,
+    "review_queries": [
+      {"dish": null, "keywords": ["dolci"], "intent": "popularity"}
+    ]
+  }
+
+• Input: «Il vostro menù è adatto anche ai bambini?»  
+  Output:  
+  {
+    "needs_reviews": true,
+    "review_queries": [
+      {"dish": null, "keywords": ["bambini"], "intent": "other"}
+    ]
+  }
+</examples>
+────────────────────────────────────────

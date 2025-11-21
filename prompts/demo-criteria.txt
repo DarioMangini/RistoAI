@@ -1,0 +1,53 @@
+────────────────────────────────────────
+<task>
+Estrai SOLO i prodotti confermati e le info logistiche. Rispondi con UN SOLO JSON conforme a <output_schema>.
+</task>
+
+<context>
+now: {today_date} {hour_minute}
+</context>
+
+<rules>
+• Stato: se nulla confermato → "confirmed_products"=[]; mantieni conferme precedenti finché non rimosse/aggiornate.
+• Ignora: domande di menu generiche, ipotesi, battute, saluti.
+• Ambiguità: termini multi-senso (es. “tonno”, “ramen”) → non aggiungere; usa "type": null finché l’utente non chiarisce.
+• Quantità: converti parole→cifre (it); default=1.
+• Splitting: separa su “e”, “con”, “più”, virgole; NON spezzare se parte del nome.
+• Nome: restituisci come digitato dall’utente, senza articoli né quantità; non aggiungere la categoria.
+• Merge: unisci SOLO se stesso nome + stesse additions/exclusions.
+• Sinonimi: “kombucha”≈ kombucha ginger; “roll piccante”≈ Uramaki Sunburn; “roll vegan”≈ Uramaki Green Garden.
+• Dati mancanti/ambigui (giorno/ora/indirizzo/prodotto): lascia vuoto; niente assunzioni.
+• Categorie riconosciute: antipasto, ceviche, piatto caldo, sashimi, nighiri, gunkan, hosomaki, uramaki, futomaki fritto, sushi di carne, vegan, tartare, degustazione, dolci, bibita, vino bianco, vino rosso, spumante, rosato, caffetteria, digestivo, birra, cocktail, gin.
+• Numeri naturali nel nome (es. “uramaki 4 pezzi”) → conserva.
+</rules>
+
+<output_schema>
+{
+  "delivery_type": "asporto | domicilio | No data",
+  "delivery_day": "YYYY-MM-DD" | "",
+  "delivery_hour": "HH:MM" | "",
+  "address": "" | null,
+  "confirmed_products": [
+    {
+      "type": "antipasto" | "ceviche" | "piatto caldo" | "sashimi" | "nighiri" | "gunkan" |
+               "hosomaki" | "uramaki" | "futomaki fritto" | "sushi di carne" | "vegan" |
+               "tartare" | "degustazione" | "dolci" | "bibita" | "Vino Bianco" | "Vino Rosso" |
+               "Spumante" | "Rosato" | "Caffetteria" | "Digestivo" | "Birra" | "Cocktail" | "Gin" | null,
+      "name": "exact product name or key ingredients",
+      "quantity": number,
+      "ingredients": [],
+      "additions": [],
+      "exclusions": []
+    }
+  ]
+}
+</output_schema>
+
+<examples>
+• Input: “Vorrei due uramaki salmon yuzu e un nigiri salmone per domani alle 20, consegna a domicilio in via Roma 15.”
+  Output: {"delivery_type":"domicilio","delivery_day":"2025-05-16","delivery_hour":"20:00","address":"via Roma 15","confirmed_products":[{"type":"uramaki","name":"salmon yuzu","quantity":2,"ingredients":[],"additions":[],"exclusions":[]},{"type":"nighiri","name":"salmone","quantity":1,"ingredients":[],"additions":[],"exclusions":[]}]}
+
+• Input: “Che dolci avete?”
+  Output: {"delivery_type":"No data","delivery_day":"","delivery_hour":"","address":"","confirmed_products":[]}
+</examples>
+────────────────────────────────────────

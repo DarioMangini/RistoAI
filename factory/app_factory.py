@@ -1,5 +1,6 @@
 # factory/app_factory.py
 
+import os
 from flask import Flask
 from core.config import Config                  # Configurazione centralizzata dell'app
 from core.db import init_db                     # Funzione per inizializzare il database
@@ -32,10 +33,12 @@ def create_app() -> Flask:
     # Inizializzazione del database con l'app Flask
     init_db(app)
 
+    api_prefix = os.getenv("API_PREFIX", "/api")
+
     # Registrazione dei Blueprint: ciascun modulo gestisce un sottoinsieme delle API REST
-    app.register_blueprint(menu_bp, url_prefix="/ristosushi_it")        # Rotte per il menu
-    app.register_blueprint(ingredients_bp, url_prefix="/ristosushi_it") # Rotte per gli ingredienti
-    app.register_blueprint(cart_bp, url_prefix="/ristosushi_it")        # Rotte per il carrello
-    app.register_blueprint(chat_bp, url_prefix="/ristosushi_it")        # Rotte per la chat AI
+    app.register_blueprint(menu_bp, url_prefix=api_prefix)        # Rotte per il menu
+    app.register_blueprint(ingredients_bp, url_prefix=api_prefix) # Rotte per gli ingredienti
+    app.register_blueprint(cart_bp, url_prefix=api_prefix)        # Rotte per il carrello
+    app.register_blueprint(chat_bp, url_prefix=api_prefix)        # Rotte per la chat AI
 
     return app

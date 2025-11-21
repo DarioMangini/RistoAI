@@ -14,5 +14,5 @@ if __name__ == "__main__":
     logging.debug("[app.py] Avvio dell'applicazione Flask")
     
     # Avvia il server Flask sull'host 0.0.0.0 (accessibile da tutte le interfacce di rete)
-    # Porta configurata su 5020 
-    app.run(host="0.0.0.0", port=5020)
+    # Porta configurata su 5010 
+    app.run(host="0.0.0.0", port=5010)
