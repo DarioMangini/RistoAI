@@ -13,6 +13,7 @@ import requests
 from typing import List, Any
 from core.config import Config
 from core.db_router import get_current_db
+from psycopg2.sql import Composed
 
 # ------------- Pool PostgreSQL (uno per DB) -------------
 _POOLS: dict[str, SimpleConnectionPool] = {}
@@ -30,7 +31,7 @@ def get_pool() -> SimpleConnectionPool:
         logging.debug("[vector_client] PG pool ready for %s", dbname)
     return _POOLS[dbname]
 
-def _run(sql: str, args: tuple | list | None = None, dict_cursor=False) -> list[Any]:
+def _run(sql: str | Composed, args: Any = None, dict_cursor: bool = False) -> list[Any]:
     pool = get_pool()
     conn = pool.getconn()
     try:
