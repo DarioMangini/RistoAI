@@ -8,6 +8,65 @@ Flask backend for a restaurant AI assistant, sanitized of corporate references a
 - Modular prompts: criteria, reviews, and final response (demo versions included).
 - Data loading scripts (data/load_menu.py, data/load_reviews.py) with dummy datasets.
 
+## Structure of the project
+```
+Directory structure:
+└── dariomangini-ristoai/
+    ├── README.md
+    ├── __init__.py
+    ├── app.py
+    ├── docker-compose.yaml
+    ├── Dockerfile
+    ├── LICENSE
+    ├── requirements.txt
+    ├── cart_services/
+    │   └── cart_service.py
+    ├── chat_services/
+    │   ├── chat_service.py
+    │   ├── criteria_api.py
+    │   └── order_builder.py
+    ├── core/
+    │   ├── aliases.py
+    │   ├── config.py
+    │   ├── db.py
+    │   ├── db_router.py
+    │   ├── llm_formatting.py
+    │   ├── models.py
+    │   ├── prompt_store.py
+    │   ├── prompt_utils.py
+    │   ├── vector_client.py
+    │   └── vector_table.py
+    ├── data/
+    │   ├── load_menu.py
+    │   ├── load_reviews.py
+    │   ├── menu.json
+    │   └── recensioni.csv
+    ├── factory/
+    │   └── app_factory.py
+    ├── menu_services/
+    │   ├── ingredient_similarity.py
+    │   ├── search_service.py
+    │   └── vector_db.py
+    ├── prompts/
+    │   ├── demo-chat.txt
+    │   ├── demo-criteria.txt
+    │   └── demo-reviews.txt
+    ├── review_services/
+    │   ├── __init__.py
+    │   ├── review_query_api.py
+    │   ├── review_service.py
+    │   └── vector_db_reviews.py
+    ├── routes/
+    │   ├── cart.py
+    │   ├── chat.py
+    │   ├── ingredients.py
+    │   └── menu.py
+    └── tests/
+        ├── __init__.py
+        ├── test_aliases.py
+        └── test_order_builder.py
+```
+
 ## Requirements
 - Python 3.10+
 - PostgreSQL 15+ with pgvector extension
