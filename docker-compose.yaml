@@ -1,0 +1,43 @@
+services:
+  # Database PostgreSQL con supporto pgvector
+  db:
+    image: ankane/pgvector:v0.5.1
+    container_name: ristoai_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-demo_restaurant}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Servizio Redis per la gestione dello stato della conversazione
+  redis:
+    image: redis:7-alpine
+    container_name: ristoai_redis
+    restart: always
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  # La tua applicazione Flask
+  app:
+    build: .
+    container_name: ristoai_backend
+    restart: always
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - DB_NAME=${DB_NAME:-demo_restaurant}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASS=${DB_PASS:-postgres}
+      - LLM_URL=${LLM_URL:-http://localhost:8000/v1/chat/completions}
+    ports:
+      - "5010:5010"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,9 @@
+flask
+flask_sqlalchemy
+pgvector
+psycopg2-binary
+requests
+redis
+pandas
+sentence-transformers
+pytest
