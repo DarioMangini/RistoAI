@@ -10,6 +10,18 @@ from __future__ import annotations
 import logging, json
 from typing import List, Dict, Any
 from review_services.vector_db_reviews import search_reviews
+import json
+
+import json
+
+def _safe_piatti(s: str | None) -> list[str]:
+    if not s:
+        return []
+    try:
+        v = json.loads(s)
+        return v if isinstance(v, list) else []
+    except Exception:
+        return []
 
 # ────────────────────────────────────────────────────────────────
 def fetch_reviews(review_queries: List[Dict[str, Any]],
@@ -55,7 +67,7 @@ def fetch_reviews(review_queries: List[Dict[str, Any]],
 
         for r in rows:
             items.append({
-                "dish": dish or ", ".join(eval(r.get("piatti", "[]"))),
+                "dish": dish or ", ".join(_safe_piatti(r.get("piatti"))),
                 "voto": str(r["voto"]),
                 "snippet": r["recensione"]
             })
