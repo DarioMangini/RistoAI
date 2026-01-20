@@ -145,19 +145,61 @@ python app.py
 ## Project Structure
 
 ```
-└── ristoai/
-    ├── app.py                  # Flask Entry point
-    ├── core/
-    │   ├── vector_client.py    # Unified Embedding management (OpenAI/Local)
-    │   ├── db.py               # SQLAlchemy init
-    │   └── models.py           # Table definitions (Menu, Reviews)
-    ├── chat_services/          # Chat business logic
-    ├── data/                   # Loading scripts and JSON/CSV datasets
-    ├── prompts/                # LLM Prompt templates
-    ├── routes/                 # API Endpoints
-    └── ...
-
-```
+ristoai/
+  ├── README.md
+  ├── __init__.py
+  ├── app.py
+  ├── docker-compose.yaml
+  ├── Dockerfile
+  ├── LICENSE
+  ├── requirements.txt
+  ├── cart_services/
+  │   └── cart_service.py
+  ├── chat_services/
+  │   ├── chat_service.py
+  │   ├── criteria_api.py
+  │   └── order_builder.py
+  ├── core/
+  │   ├── aliases.py
+  │   ├── config.py
+  │   ├── db.py
+  │   ├── db_router.py
+  │   ├── llm_formatting.py
+  │   ├── models.py
+  │   ├── prompt_store.py
+  │   ├── prompt_utils.py
+  │   ├── vector_client.py
+  │   └── vector_table.py
+  ├── data/
+  │   ├── load_menu.py
+  │   ├── load_reviews.py
+  │   ├── menu.json
+  │   └── recensioni.csv
+  ├── factory/
+  │   └── app_factory.py
+  ├── menu_services/
+  │   ├── ingredient_similarity.py
+  │   ├── search_service.py
+  │   └── vector_db.py
+  ├── prompts/
+  │   ├── demo-chat.txt
+  │   ├── demo-criteria.txt
+  │   └── demo-reviews.txt
+  ├── review_services/
+  │   ├── __init__.py
+  │   ├── review_query_api.py
+  │   ├── review_service.py
+  │   └── vector_db_reviews.py
+  ├── routes/
+  │   ├── cart.py
+  │   ├── chat.py
+  │   ├── ingredients.py
+  │   └── menu.py
+  └── tests/
+      ├── __init__.py
+      ├── test_aliases.py
+      └── test_order_builder.py
+``
 
 ## GUI
 
