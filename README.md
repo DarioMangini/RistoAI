@@ -1,154 +1,168 @@
-# RistoAI (demo)
+# RistoAI
 
-Flask backend for a restaurant AI assistant, sanitized of corporate references and including demo data. It uses Postgres + pgvector for menu/reviews, an external LLM for criteria/chat, and Redis for conversational state.
+Flask backend for a restaurant AI assistant. This version is designed to be **easily runnable locally** (Standalone), removing the dependency on complex external microservices found in previous versions.
+
+Natively supports:
+- **OpenAI** (GPT-4o, text-embedding-3) for an immediate setup.
+- **Local CPU** (SentenceTransformers) for free embeddings without a GPU.
+- **Ollama** (via compatible APIs) for local LLMs.
 
 ## Features
-- REST API (/api/...) for menu, ingredients, cart, and AI chat.
-- Semantic search on menu and reviews via pgvector and an embedding microservice.
-- Modular prompts: criteria, reviews, and final response (demo versions included).
-- Data loading scripts (data/load_menu.py, data/load_reviews.py) with dummy datasets.
-
-## Structure of the project
-```
-Directory structure:
-└── dariomangini-ristoai/
-    ├── README.md
-    ├── __init__.py
-    ├── app.py
-    ├── docker-compose.yaml
-    ├── Dockerfile
-    ├── LICENSE
-    ├── requirements.txt
-    ├── cart_services/
-    │   └── cart_service.py
-    ├── chat_services/
-    │   ├── chat_service.py
-    │   ├── criteria_api.py
-    │   └── order_builder.py
-    ├── core/
-    │   ├── aliases.py
-    │   ├── config.py
-    │   ├── db.py
-    │   ├── db_router.py
-    │   ├── llm_formatting.py
-    │   ├── models.py
-    │   ├── prompt_store.py
-    │   ├── prompt_utils.py
-    │   ├── vector_client.py
-    │   └── vector_table.py
-    ├── data/
-    │   ├── load_menu.py
-    │   ├── load_reviews.py
-    │   ├── menu.json
-    │   └── recensioni.csv
-    ├── factory/
-    │   └── app_factory.py
-    ├── menu_services/
-    │   ├── ingredient_similarity.py
-    │   ├── search_service.py
-    │   └── vector_db.py
-    ├── prompts/
-    │   ├── demo-chat.txt
-    │   ├── demo-criteria.txt
-    │   └── demo-reviews.txt
-    ├── review_services/
-    │   ├── __init__.py
-    │   ├── review_query_api.py
-    │   ├── review_service.py
-    │   └── vector_db_reviews.py
-    ├── routes/
-    │   ├── cart.py
-    │   ├── chat.py
-    │   ├── ingredients.py
-    │   └── menu.py
-    └── tests/
-        ├── __init__.py
-        ├── test_aliases.py
-        └── test_order_builder.py
-```
+- **REST API** (`/api/...`) for menu, ingredients, cart management, and AI chat.
+- **Hybrid Semantic Search**: Uses `pgvector` on PostgreSQL. Embeddings are calculated internally (via CPU or external APIs).
+- **Modular Architecture**: Monolithic backend prepared for scalability.
+- **Dynamic Prompts**: Advanced management of prompts for criteria extraction, reviews, and final responses.
+- **Docker Ready**: Complete setup with a single command.
 
 ## Requirements
-- Python 3.10+
-- PostgreSQL 15+ with pgvector extension
-- Redis (for chat memory)
-- An LLM endpoint compatible with /v1/chat/completions
-- An HTTP embedding endpoint (default: local all-mpnet-base-v2)
+- Docker & Docker Compose (Recommended)
+- *Or:* Python 3.10+ and PostgreSQL 15+ with `vector` extension enabled.
 
-## Quick Install
+## 🚀 Quick Start (Docker) - Recommended
+
+This is the fastest way to test the project without installing Python libraries on your host machine.
+
+### 1. Configuration
+Create a `.env` file in the project root:
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install flask flask_sqlalchemy pgvector psycopg2-binary requests redis pandas sentence-transformers
-```
+# Choose embedding provider: 'openai' or 'local_cpu'
+EMBEDDING_PROVIDER=openai
+OPENAI_API_KEY=sk-proj-your-key-here
 
-## Key Environment Variables
-```
+# LLM Configuration (Example with OpenAI)
+LLM_URL=https://api.openai.com/v1/chat/completions
+LLM_MODEL=gpt-4o-mini
+# LLM_API_KEY=${OPENAI_API_KEY}  # Optional if using the same key as above
+
+# Database (Internal to Docker)
 DB_NAME=demo_restaurant
 DB_USER=postgres
-DB_PASS=postgres
-DB_HOST=localhost
+DB_PASS=password
+DB_HOST=db
 DB_PORT=5432
 
-LLM_URL=http://localhost:8000/v1/chat/completions
-LLM_MODEL=google/gemma-3-27b-it
-EMB_URL_MPNET=http://localhost:5040/embedding/all-mpnet-base-v2
-
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-API_PREFIX=/api
-PROMPTS_DIR=prompts          # optional, default is internal folder
-CHAT_PROMPT_FILE=prompts/demo-chat.txt
-CRITERIA_PROMPT_BASENAME=demo-criteria
-REVIEWS_PROMPT_BASENAME=demo-reviews
-
-# optional for remote fallback calls
-CRITERIA_REMOTE_URL=http://localhost:9001/api/criteria
-REVIEWS_REMOTE_URL=http://localhost:9001/api/reviews
-REMOTE_API_KEY=changeme
 ```
 
-## Database Setup
-1. Create the database and enable pgvector:
-   ```sql
-   CREATE EXTENSION IF NOT EXISTS vector;
-   ```
-2. Run the app for the first time (creates SQLAlchemy tables) or run `flask shell` to execute `db.create_all()`.
+### 2. Start
 
-## Loading Demo Data
-With the environment active and DB env vars set:
 ```bash
-python data/load_menu.py      # inserts 46 demo dishes with embeddings
-python data/load_reviews.py   # inserts 12 demo reviews with embeddings
+docker-compose up --build -d
+
 ```
 
-## Starting the Server
+Wait for the containers (`ristoai-app`, `db`, `redis`) to be fully active.
+
+### 3. Load Demo Data (Important!)
+
+The database is created empty. You must populate it by running the scripts **inside** the container:
+
 ```bash
-export FLASK_APP=app.py
-python app.py  # defaults to exposing on 0.0.0.0:5010
-```
-Routes are located under `API_PREFIX` (default `/api`),e.g., `POST /api/chat`.
+# Enter the container
+docker exec -it ristoai-app-1 bash
 
-## Chat Call Example
+# Run data loading (will use OpenAI or CPU based on your config)
+python data/load_menu.py
+python data/load_reviews.py
+
+# Exit the container
+exit
+
+```
+
+### 4. Test
+
+The server is running at `http://localhost:5010`.
+
+**Chat Example:**
+
 ```bash
 curl -X POST http://localhost:5010/api/chat \
   -H "Content-Type: application/json" \
   -d '{
-    "prompts": "",
     "project": "demo",
+    "sessionid": "session-1",
     "conversation_history": [
-      {"role": "user", "content": "Mi consigli un uramaki piccante?"}
+      {"role": "user", "content": "Hi, can you recommend a vegan sushi?"}
     ]
   }'
+
 ```
 
-## Prompts and Data
-- Demo prompts located in `prompts/demo-*.txt`.
-- Dummy datasets in `data/menu.json` and `data/recensioni.csv`.
+---
+
+## 🛠 Manual Installation (Without Docker)
+
+If you prefer running everything on your host (requires local Postgres installed and configured):
+
+1. **Database**: Ensure Postgres 15+ is running on port 5432 and create the DB:
+```sql
+CREATE DATABASE demo_restaurant;
+\c demo_restaurant
+CREATE EXTENSION vector;
+
+```
+
+
+2. **Python Env**:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+```
+
+
+3. **Load Data**:
+```bash
+export DB_HOST=localhost
+export DB_PASS=your_password
+# ... export other env vars (see Docker section)
+python data/load_menu.py
+python data/load_reviews.py
+
+```
+
+
+4. **Start Server**:
+```bash
+python app.py
+
+```
+
+
+
+## Key Environment Variables
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `EMBEDDING_PROVIDER` | `local_cpu` | `openai` uses remote APIs, `local_cpu` uses internal SentenceTransformers. |
+| `OPENAI_API_KEY` | - | Required if using `openai` provider. |
+| `LLM_URL` | (localhost) | Endpoint for chat completions (e.g., OpenAI, Ollama, vLLM). |
+| `LLM_MODEL` | `google/gemma...` | Model name to pass to the API. |
+| `DB_PORT` | `5432` | Internal DB port. Note: Docker exposes port 5433 externally to avoid conflicts. |
+
+## Project Structure
+
+```
+└── ristoai/
+    ├── app.py                  # Flask Entry point
+    ├── core/
+    │   ├── vector_client.py    # Unified Embedding management (OpenAI/Local)
+    │   ├── db.py               # SQLAlchemy init
+    │   └── models.py           # Table definitions (Menu, Reviews)
+    ├── chat_services/          # Chat business logic
+    ├── data/                   # Loading scripts and JSON/CSV datasets
+    ├── prompts/                # LLM Prompt templates
+    ├── routes/                 # API Endpoints
+    └── ...
+
+```
 
 ## GUI
-A GUI is not included in this repo; the backend is designed to be exposed to an external frontend (web/mobile).
 
-Author
------------------
-Mangini Dario
+A GUI is not included in this repo; the backend is designed to be exposed to an external frontend (web/mobile). 
+
+---
+
+**Author**: Mangini Dario
