@@ -7,3 +7,4 @@ redis
 pandas
 sentence-transformers
 pytest
+openai

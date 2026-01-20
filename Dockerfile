@@ -12,6 +12,14 @@ RUN apt-get update && apt-get install -y \
 
 # Copia e installa i requisiti Python
 COPY requirements.txt .
+
+# 1. Aggiorna pip per sicurezza
+RUN pip install --upgrade pip
+
+# 2. Installa PRIMA la versione CPU di PyTorch (molto più leggera)
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# 3. Ora installa il resto (che troverà torch già installato e non scaricherà quello gigante)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia tutto il resto del codice nel container

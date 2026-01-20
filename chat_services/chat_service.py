@@ -7,6 +7,7 @@ e interroga il modello vLLM per generare la risposta.
 """
 
 import json, logging, os, re, time
+from wsgiref import headers
 import redis
 from typing import List, Dict, Any
 from concurrent.futures import ThreadPoolExecutor
@@ -377,7 +378,10 @@ def chat(payload: Dict[str,Any]) -> Dict[str,Any]:
 
     logging.debug("[chat_service] chiamo vLLM…")
     try:
-        r = requests.post(LLM_URL, json=payload_llm, timeout=240)
+        headers = {}
+        if "api.openai.com" in LLM_URL or os.getenv("LLM_API_KEY"):
+            headers["Authorization"] = f"Bearer {os.getenv('LLM_API_KEY', '')}"
+        r = requests.post(LLM_URL, json=payload_llm, headers=headers, timeout=60)
         r.raise_for_status()
         llm = r.json()
         content = llm["choices"][0]["message"]["content"]

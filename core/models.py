@@ -10,6 +10,7 @@ Entrambe le tabelle contengono un embedding SBERT (pgvector).
 from core.db import db                 
 from pgvector.sqlalchemy import Vector
 
+VECTOR_DIM = 1536
 
 class Menu(db.Model):
     __tablename__ = "menu"
@@ -19,7 +20,7 @@ class Menu(db.Model):
     type        = db.Column(db.Text)
     ingredients = db.Column(db.ARRAY(db.Text))
     description = db.Column(db.Text)
-    embedding   = db.Column(Vector(768))        # pgvector
+    embedding   = db.Column(Vector(VECTOR_DIM))       # pgvector
     price       = db.Column(db.Numeric(10, 2))
 
 class Recensioni(db.Model):
@@ -29,4 +30,4 @@ class Recensioni(db.Model):
     voto       = db.Column(db.Integer, nullable=False)
     recensione = db.Column(db.Text,    nullable=False)
     piatti     = db.Column(db.Text)                 # JSON serializzato (str)
-    embedding  = db.Column(Vector(768))
+    embedding  = db.Column(Vector(VECTOR_DIM))

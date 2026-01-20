@@ -14,13 +14,17 @@ Esempio di esecuzione:
     python data/load_menu.py
 """
 
-import json, os, time
+#!/usr/bin/env python3
+import json, os, sys, time
 from pathlib import Path
+import psycopg2, psycopg2.extras
 
-import psycopg2, psycopg2.extras            # DB driver
-from sentence_transformers import SentenceTransformer   # embedding (CPU)
+# AGGIUNTA FONDAMENTALE: Aggiunge la root del progetto al path per importare 'core'
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-# ───── CONFIGURAZIONE ───────────────────────────────────────────────
+from core.vector_client import get_embedding  # <--- Usa il client centralizzato
+
+# Configurazione DB
 DB = dict(
     dbname   = os.getenv("DB_NAME", "demo_restaurant"),
     user     = os.getenv("DB_USER", "postgres"),
@@ -31,68 +35,57 @@ DB = dict(
 
 DATA_DIR   = Path(__file__).resolve().parent
 MENU_JSON  = Path(os.getenv("MENU_JSON", DATA_DIR / "menu.json"))
-MODEL_NAME  = "sentence-transformers/all-mpnet-base-v2"   # 768 dim
-BATCH_SIZE  = 64                                          # tweak se vuoi
 
-# ───── 1. CARICAMENTO JSON ──────────────────────────────────────────
 print(f"• Apro {MENU_JSON} …")
 with MENU_JSON.open(encoding="utf-8") as f:
     raw_menu = json.load(f)
 
-print(f"  Trovati {len(raw_menu)} piatti nel JSON")
+print(f"  Trovati {len(raw_menu)} piatti. Calcolo embedding via Provider configurato...")
 
-# ───── 2. COSTRUZIONE TEXT + RIGHE DB ───────────────────────────────
-texts, rows = [], []
+rows = []
+start = time.time()
+
 for item in raw_menu:
+    # Crea il testo da vettorizzare
     txt = " | ".join([
         item.get("name", ""),
         item.get("type", ""),
         item.get("description", ""),
         ", ".join(item.get("ingredients", []))
     ])
-    texts.append(txt)
+    
+    # CHIAMA OPENAI (o il modello locale leggero) TRAMITE IL CLIENT UNIFICATO
+    # Gestisce automaticamente i ritentativi e la logica
+    vector = get_embedding(txt) 
 
     rows.append((
         item.get("name", ""),
         item.get("type", ""),
         item.get("ingredients", []),
         item.get("description", ""),
-        float(item.get("price", 0)),   # default 0 se manca
-        None                           # placeholder embedding
+        float(item.get("price", 0)),
+        vector  # Lista float
     ))
 
-# ───── 3. CALCOLO EMBEDDING (CPU) ───────────────────────────────────
-print(f"• Carico modello '{MODEL_NAME}' (CPU) …")
-model = SentenceTransformer(MODEL_NAME, device="cpu")
-start = time.time()
+print(f"• Calcolo finito in {time.time()-start:.1f} s. Scrivo su DB...")
 
-print("• Calcolo embedding …")
-emb = model.encode(
-    texts,
-    batch_size=BATCH_SIZE,
-    show_progress_bar=True,
-    device="cpu",
-    normalize_embeddings=True
-)
-print(f"  Fatto in {time.time()-start:.1f} s")
-
-for i, e in enumerate(emb):
-    rows[i] = rows[i][:-1] + (e.tolist(),)
-
-# ───── 4. INSERIMENTO BULK IN POSTGRES ──────────────────────────────
-print("• Inserisco i dati in PostgreSQL …")
 INSERT_SQL = """
 INSERT INTO menu (name, type, ingredients, description, price, embedding)
 VALUES %s
 """
 
-with psycopg2.connect(**DB) as con, con.cursor() as cur:
-    psycopg2.extras.execute_values(
-        cur,
-        INSERT_SQL,
-        rows,
-        template="(%s,%s,%s,%s,%s,%s::vector)"
-    )
-    print(f"  Inseriti {len(rows)} record in tabella menu")
-
-print("✓ Operazione completata!")
+try:
+    with psycopg2.connect(**DB) as con, con.cursor() as cur:
+        # Svuota la tabella prima di ricaricare per evitare duplicati
+        cur.execute("TRUNCATE TABLE menu;")
+        
+        psycopg2.extras.execute_values(
+            cur,
+            INSERT_SQL,
+            rows,
+            template="(%s,%s,%s,%s,%s,%s::vector)"
+        )
+        print(f"✓ Inseriti {len(rows)} record in tabella menu")
+except Exception as e:
+    print(f"ERRORE SQL: {e}")
+    print("Suggerimento: Se l'errore riguarda le dimensioni del vettore, cancella il volume docker e riavvia.")

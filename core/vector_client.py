@@ -14,6 +14,11 @@ from typing import List, Any
 from core.config import Config
 from core.db_router import get_current_db
 from psycopg2.sql import Composed
+import os, logging
+import math
+from typing import List, Any
+from sentence_transformers  import SentenceTransformer
+import openai
 
 # ------------- Pool PostgreSQL (uno per DB) -------------
 _POOLS: dict[str, SimpleConnectionPool] = {}
@@ -23,6 +28,21 @@ _PG_STATIC = {
     "host":     Config.DB_HOST,
     "port":     Config.DB_PORT,
 }
+
+# Configurazione
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local_cpu") # local_cpu | openai
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Carica il modello in memoria solo se necessario (singleton)
+_LOCAL_MODEL = None
+
+def _get_local_model():
+    global _LOCAL_MODEL
+    if _LOCAL_MODEL is None:
+        logging.info("Caricamento modello embedding locale (CPU)...")
+        # Usa un modello molto leggero ma efficace
+        _LOCAL_MODEL = SentenceTransformer("all-MiniLM-L6-v2") 
+    return _LOCAL_MODEL
 
 def get_pool() -> SimpleConnectionPool:
     dbname = get_current_db()
@@ -86,4 +106,18 @@ def _embed_one_cached(text: str) -> tuple[float, ...]:
         return tuple()  # evita crash: il chiamante potrà gestire embedding vuoto
 
 def get_embedding(text: str) -> List[float]:
-    return list(_embed_one_cached(text))
+    text = text.replace("\n", " ")
+    
+    if EMBEDDING_PROVIDER == "openai":
+        # Uso OpenAI (richiede API Key)
+        if not OPENAI_API_KEY:
+            raise ValueError("OPENAI_API_KEY mancante")
+        client = openai.Client(api_key=OPENAI_API_KEY)
+        resp = client.embeddings.create(input=[text], model="text-embedding-3-small")
+        return resp.data[0].embedding
+        
+    else:
+        # Uso CPU Locale (Gratis, funziona su ogni PC)
+        model = _get_local_model()
+        vec = model.encode(text, normalize_embeddings=True)
+        return vec.tolist()
