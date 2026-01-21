@@ -10,7 +10,7 @@ Entrambe le tabelle contengono un embedding SBERT (pgvector).
 from core.db import db                 
 from pgvector.sqlalchemy import Vector
 
-VECTOR_DIM = 1536
+VECTOR_DIM = 384
 
 class Menu(db.Model):
     __tablename__ = "menu"

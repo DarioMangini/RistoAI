@@ -4,10 +4,11 @@ services:
     restart: always
     environment:
       POSTGRES_DB: demo_restaurant
+      DB_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -21,21 +22,24 @@ services:
     build: .
     ports:
       - "5010:5010"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - DB_HOST=db
       - DB_PASS=password
       - REDIS_HOST=redis
       - REDIS_HOST=redis
       # --- CONFIGURAZIONE AI ---
-      # Opzione 1: OpenAI (più semplice per demo)
-      - EMBEDDING_PROVIDER=openai 
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - LLM_URL=https://api.openai.com/v1/chat/completions
-      - LLM_MODEL=gpt-4o-mini  # Modello economico e veloce
+      # Opzione 1: OpenAI 
+      #- EMBEDDING_PROVIDER=openai 
+      #- OPENAI_API_KEY=${OPENAI_API_KEY}
+      #- LLM_URL=https://api.openai.com/v1/chat/completions
+      #- LLM_MODEL=gpt-4o-mini  # Modello economico e veloce
       
       # Opzione 2 (Alternativa): Ollama locale (se installato sul PC)
-      # - LLM_URL=http://host.docker.internal:11434/v1/chat/completions
-      # - LLM_MODEL=llama3
+      - LLM_URL=http://host.docker.internal:11434/v1/chat/completions
+      - LLM_MODEL=gemma:2b
+      - EMBEDDING_PROVIDER=local_cpu
     depends_on:
       - db
       - redis

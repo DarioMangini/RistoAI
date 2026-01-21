@@ -67,7 +67,7 @@ def _call_llm(msgs: List[Dict[str,str]], json_mode=True, max_tok=512) -> str:
     if json_mode:
         payload["response_format"] = {"type": "json_object"}
     logging.debug("[criteria][LLM] req: %.400s", json.dumps(payload, ensure_ascii=False))
-    r = requests.post(LLM_URL, json=payload, timeout=60)
+    r = requests.post(LLM_URL, json=payload, timeout=120)
     r.raise_for_status()
     return r.json()["choices"][0]["message"]["content"]
 

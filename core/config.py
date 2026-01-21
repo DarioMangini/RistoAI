@@ -14,7 +14,7 @@ class Config:
     DB_USER = os.getenv("DB_USER", "postgres")
     DB_PASS = os.getenv("DB_PASS", "postgres")
     DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_PORT = int(os.getenv("DB_PORT", "5433"))
+    DB_PORT = int(os.getenv("DB_PORT", "5432"))
 
     # URI compatibile con SQLAlchemy
     SQLALCHEMY_DATABASE_URI = os.getenv(

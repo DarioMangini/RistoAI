@@ -381,7 +381,7 @@ def chat(payload: Dict[str,Any]) -> Dict[str,Any]:
         headers = {}
         if "api.openai.com" in LLM_URL or os.getenv("LLM_API_KEY"):
             headers["Authorization"] = f"Bearer {os.getenv('LLM_API_KEY', '')}"
-        r = requests.post(LLM_URL, json=payload_llm, headers=headers, timeout=60)
+        r = requests.post(LLM_URL, json=payload_llm, headers=headers, timeout=180)
         r.raise_for_status()
         llm = r.json()
         content = llm["choices"][0]["message"]["content"]

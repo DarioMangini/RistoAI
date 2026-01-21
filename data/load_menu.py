@@ -88,4 +88,3 @@ try:
         print(f"✓ Inseriti {len(rows)} record in tabella menu")
 except Exception as e:
     print(f"ERRORE SQL: {e}")
-    print("Suggerimento: Se l'errore riguarda le dimensioni del vettore, cancella il volume docker e riavvia.")
